@@ -22,8 +22,8 @@ import (
 	"time"
 )
 
-const (
-	clusterFormationTimeout = MAX_ELECTION_TIMEOUT + 100*time.Millisecond
+var (
+	clusterFormationTimeout = MaxElectionTimeout + 100*time.Millisecond
 )
 
 type dummyHandler struct {

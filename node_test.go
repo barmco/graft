@@ -129,10 +129,10 @@ func TestClose(t *testing.T) {
 
 func TestElectionTimeoutDuration(t *testing.T) {
 	et := randElectionTimeout()
-	if et < MIN_ELECTION_TIMEOUT || et > MAX_ELECTION_TIMEOUT {
+	if et < MinElectionTimeout || et > MaxElectionTimeout {
 		t.Fatalf("Election Timeout expected to be between %d-%d ms, got %d ms",
-			MIN_ELECTION_TIMEOUT/time.Millisecond,
-			MAX_ELECTION_TIMEOUT/time.Millisecond,
+			MinElectionTimeout/time.Millisecond,
+			MaxElectionTimeout/time.Millisecond,
 			et/time.Millisecond)
 	}
 }
@@ -195,7 +195,7 @@ func TestStaggeredStart(t *testing.T) {
 			t.Fatalf("Expected no error, got: %v", err)
 		}
 		nodes[i] = node
-		time.Sleep(MAX_ELECTION_TIMEOUT)
+		time.Sleep(MaxElectionTimeout)
 	}
 	// Do cleanup
 	for _, n := range nodes {
@@ -281,7 +281,7 @@ func TestReElection(t *testing.T) {
 		defer n.Close()
 	}
 
-	time.Sleep(MAX_ELECTION_TIMEOUT)
+	time.Sleep(MaxElectionTimeout)
 
 	// Find and close down the leader
 	leader := findLeader(nodes)

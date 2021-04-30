@@ -31,7 +31,7 @@ func wait(t *testing.T, ch chan StateChange) *StateChange {
 	// It could be that the random election time is the max. Inc
 	// that case, the node will still need a bit more time to
 	// transition.
-	case <-time.After(MAX_ELECTION_TIMEOUT + 50*time.Millisecond):
+	case <-time.After(MaxElectionTimeout + 50*time.Millisecond):
 		t.Fatal("Timeout waiting on state change")
 	}
 	return nil
@@ -41,7 +41,7 @@ func errWait(t *testing.T, ch chan error) error {
 	select {
 	case err := <-ch:
 		return err
-	case <-time.After(MAX_ELECTION_TIMEOUT):
+	case <-time.After(MaxElectionTimeout):
 		t.Fatal("Timeout waiting on error handler")
 	}
 	return nil
@@ -136,7 +136,7 @@ func TestChandHandlerNotBlockingNode(t *testing.T) {
 	node.electTimer.Reset(time.Hour)
 	node.mu.Unlock()
 	// Wait in case election was happening
-	time.Sleep(MAX_ELECTION_TIMEOUT + 50*time.Millisecond)
+	time.Sleep(MaxElectionTimeout + 50*time.Millisecond)
 	// Drain the state changes
 	drained := false
 	for !drained {

@@ -65,7 +65,7 @@ func TestNatsLeaderElection(t *testing.T) {
 	leader := findLeader(nodes)
 
 	// Wait for Election timout
-	time.Sleep(MAX_ELECTION_TIMEOUT)
+	time.Sleep(MaxElectionTimeout)
 
 	if newLeader := findLeader(nodes); newLeader != leader {
 		t.Fatalf("Expected leader to keep power, was %q, now %q\n",

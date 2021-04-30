@@ -246,7 +246,7 @@ func (n *Node) isRunning() bool {
 // Process loop for a LEADER.
 func (n *Node) runAsLeader() {
 	// Setup our heartbeat ticker
-	hb := time.NewTicker(HEARTBEAT_INTERVAL)
+	hb := time.NewTicker(HeartbeatInterval)
 	defer hb.Stop()
 
 	for {
@@ -625,8 +625,8 @@ func (n *Node) resetElectionTimeout() {
 // Generate a random timeout between MIN and MAX Election timeouts.
 // The randomness is required for the RAFT algorithm to be stable.
 func randElectionTimeout() time.Duration {
-	delta := mrand.Int63n(int64(MAX_ELECTION_TIMEOUT - MIN_ELECTION_TIMEOUT))
-	return (MIN_ELECTION_TIMEOUT + time.Duration(delta))
+	delta := mrand.Int63n(int64(MaxElectionTimeout - MinElectionTimeout))
+	return (MinElectionTimeout + time.Duration(delta))
 }
 
 // processQuit will change or internal state to CLOSED and will close the
