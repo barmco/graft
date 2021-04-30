@@ -308,6 +308,7 @@ func (n *Node) runAsLeader() {
 				n.switchToFollower(hb.Leader)
 				return
 			}
+		case <-n.VoteResponses:
 		}
 		if lk != n.ClusterInfo().Size() {
 			n.switchToFollower(NO_LEADER)
@@ -436,6 +437,7 @@ func (n *Node) runAsFollower() {
 			if stepDown := n.handleHeartBeat(hb); stepDown {
 				n.setLeader(hb.Leader)
 			}
+		case <-n.VoteResponses:
 		}
 	}
 }
@@ -719,7 +721,7 @@ func (n *Node) setLeader(newLeader string) {
 	defer n.mu.Unlock()
 	n.leader = newLeader
 	s := n.state
-	go func()  {
+	go func() {
 		n.handler.StateChange(s, s)
 	}()
 }
