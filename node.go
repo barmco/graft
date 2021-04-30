@@ -252,6 +252,7 @@ func checkArgs(info *ClusterInfo, handler Handler, rpc RPCDriver, logPath string
 // Mainloop that switches states and reacts to voteRequests and Heartbeats.
 func (n *Node) loop() {
 	for n.isRunning() {
+		lk := n.ClusterInfo().Size()
 		switch n.State() {
 		case FOLLOWER:
 			n.runAsFollower()
@@ -259,6 +260,9 @@ func (n *Node) loop() {
 			n.runAsCandidate()
 		case LEADER:
 			n.runAsLeader()
+		}
+		if lk != n.ClusterInfo().Size() {
+			n.switchToFollower(NO_LEADER)
 		}
 	}
 }
