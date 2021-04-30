@@ -251,6 +251,7 @@ func checkArgs(info *ClusterInfo, handler Handler, rpc RPCDriver, logPath string
 
 // Mainloop that switches states and reacts to voteRequests and Heartbeats.
 func (n *Node) loop() {
+	n.handler.StateChange(n.state, n.state)
 	for n.isRunning() {
 		switch n.State() {
 		case FOLLOWER:
@@ -306,6 +307,7 @@ func (n *Node) runAsLeader() {
 				n.switchToFollower(hb.Leader)
 				return
 			}
+		case <-n.VoteResponses:
 		}
 	}
 }
@@ -347,6 +349,7 @@ func (n *Node) runAsCandidate() {
 	}
 
 	for {
+		lk := n.ClusterInfo().Size()
 		select {
 
 		// Request to quit
@@ -390,6 +393,10 @@ func (n *Node) runAsCandidate() {
 				return
 			}
 		}
+		if lk != n.ClusterInfo().Size() {
+			n.switchToFollower(NO_LEADER)
+			return
+		}
 	}
 }
 
@@ -425,6 +432,7 @@ func (n *Node) runAsFollower() {
 			if stepDown := n.handleHeartBeat(hb); stepDown {
 				n.setLeader(hb.Leader)
 			}
+		case <-n.VoteResponses:
 		}
 	}
 }
@@ -707,6 +715,10 @@ func (n *Node) setLeader(newLeader string) {
 	n.mu.Lock()
 	defer n.mu.Unlock()
 	n.leader = newLeader
+	s := n.state
+	go func() {
+		n.handler.StateChange(s, s)
+	}()
 }
 
 func (n *Node) Leader() string {
