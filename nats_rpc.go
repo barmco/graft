@@ -76,7 +76,7 @@ func (rpc *NatsRpcDriver) Init(n *Node) (err error) {
 	rpc.node = n
 
 	// Create the heartbeat subscription.
-	hbSub := fmt.Sprintf(HEARTBEAT_SUB, n.ClusterInfo().Name)
+	hbSub := fmt.Sprintf(HEARTBEAT_SUB, n.ClusterInfo().Name())
 	rpc.hbSub, err = rpc.ec.Subscribe(hbSub, rpc.HeartbeatCallback)
 	if err != nil {
 		return err
@@ -121,7 +121,7 @@ func (rpc *NatsRpcDriver) vrespSubject(candidate string) string {
 
 // Convenience funstion for generating the vote request subject.
 func (rpc *NatsRpcDriver) vreqSubject() string {
-	return fmt.Sprintf(VOTE_REQ_SUB, rpc.node.ClusterInfo().Name)
+	return fmt.Sprintf(VOTE_REQ_SUB, rpc.node.ClusterInfo().Name())
 }
 
 // HeartbeatCallback will place the heartbeat on the Graft
