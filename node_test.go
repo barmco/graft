@@ -21,17 +21,17 @@ import (
 
 func TestNew(t *testing.T) {
 	// Test bad ClusterInfos
-	bci := ClusterInfo{Name: "", Size: 5}
+	bci := &ClusterInfo{name: "", size: 5}
 	if _, err := New(bci, nil, nil, ""); err == nil || err != ErrClusterName {
 		t.Fatal("Expected an error with empty cluster name")
 	}
-	bci = ClusterInfo{Name: "foo", Size: 0}
+	bci = &ClusterInfo{name: "foo", size: 0}
 	if _, err := New(bci, nil, nil, ""); err == nil || err != ErrClusterSize {
 		t.Fatal("Expected an error with empty cluster name")
 	}
 
 	// Good ClusterInfo
-	ci := ClusterInfo{Name: "foo", Size: 3}
+	ci := &ClusterInfo{name: "foo", size: 3}
 
 	// Handler is required
 	if _, err := New(ci, nil, nil, ""); err == nil || err != ErrHandlerReq {
@@ -88,7 +88,7 @@ func TestNew(t *testing.T) {
 func TestClose(t *testing.T) {
 	base := runtime.NumGoroutine()
 
-	ci := ClusterInfo{Name: "foo", Size: 3}
+	ci := &ClusterInfo{name: "foo", size: 3}
 	hand, rpc, log := genNodeArgs(t)
 
 	node, err := New(ci, hand, rpc, log)
@@ -138,7 +138,7 @@ func TestElectionTimeoutDuration(t *testing.T) {
 }
 
 func TestCandidateState(t *testing.T) {
-	ci := ClusterInfo{Name: "foo", Size: 3}
+	ci := &ClusterInfo{name: "foo", size: 3}
 	hand, rpc, log := genNodeArgs(t)
 	node, err := New(ci, hand, rpc, log)
 	if err != nil {
@@ -157,7 +157,7 @@ func TestCandidateState(t *testing.T) {
 
 func TestLeaderState(t *testing.T) {
 	// Expected of 1, we should immediately win the election.
-	ci := ClusterInfo{Name: "foo", Size: 1}
+	ci := &ClusterInfo{name: "foo", size: 1}
 	hand, rpc, log := genNodeArgs(t)
 	node, err := New(ci, hand, rpc, log)
 	if err != nil {
@@ -186,7 +186,7 @@ func TestSimpleLeaderElection(t *testing.T) {
 }
 
 func TestStaggeredStart(t *testing.T) {
-	ci := ClusterInfo{Name: "staggered", Size: 3}
+	ci := &ClusterInfo{name: "staggered", size: 3}
 	nodes := make([]*Node, 3)
 	for i := 0; i < 3; i++ {
 		hand, rpc, logPath := genNodeArgs(t)

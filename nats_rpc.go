@@ -164,7 +164,7 @@ func (rpc *NatsRpcDriver) RequestVote(vr *pb.VoteRequest) error {
 	}
 	// If we can auto-unsubscribe to max number of expected responses
 	// which will be the cluster size.
-	if size := rpc.node.ClusterInfo().Size; size > 0 {
+	if size := rpc.node.ClusterInfo().Size(); size > 0 {
 		sub.AutoUnsubscribe(size)
 	}
 	// hold to cancel later.

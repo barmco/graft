@@ -63,7 +63,7 @@ func genNodeArgs(t *testing.T) (Handler, RPCDriver, string) {
 }
 
 func createNodes(t *testing.T, name string, numNodes int) []*Node {
-	ci := ClusterInfo{Name: name, Size: numNodes}
+	ci := &ClusterInfo{name: name, size: numNodes}
 	nodes := make([]*Node, numNodes)
 	for i := 0; i < numNodes; i++ {
 		hand, rpc, logPath := genNodeArgs(t)

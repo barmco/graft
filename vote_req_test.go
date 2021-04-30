@@ -39,7 +39,7 @@ func (s *stateMachineHandler) GrantVote(position []byte) bool {
 }
 
 func vreqNode(t *testing.T, expected int) *Node {
-	ci := ClusterInfo{Name: "vreq", Size: expected}
+	ci := &ClusterInfo{name: "vreq", size: expected}
 	hand, rpc, log := genNodeArgs(t)
 	node, err := New(ci, hand, rpc, log)
 	if err != nil {
@@ -144,7 +144,7 @@ func TestVoteRequestAsFollower(t *testing.T) {
 }
 
 func TestVoteRequestAsFollowerLogBehind(t *testing.T) {
-	ci := ClusterInfo{Name: "vreq", Size: 3}
+	ci := &ClusterInfo{name: "vreq", size: 3}
 	_, rpc, log := genNodeArgs(t)
 	stateHandler := new(stateMachineHandler)
 	scCh := make(chan StateChange)

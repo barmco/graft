@@ -119,7 +119,7 @@ func (rpc *MockRpcDriver) Init(n *Node) error {
 	}
 	// Redo the channels to be buffered since we could be
 	// sending and block the select loops.
-	cSize := n.ClusterInfo().Size
+	cSize := n.ClusterInfo().Size()
 	n.VoteRequests = make(chan *pb.VoteRequest, cSize)
 	n.VoteResponses = make(chan *pb.VoteResponse, cSize)
 	n.HeartBeats = make(chan *pb.Heartbeat, cSize)

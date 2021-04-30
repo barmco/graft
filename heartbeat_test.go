@@ -24,7 +24,7 @@ import (
 // Test HeartBeat RPC in different states.
 
 func hbNode(t *testing.T, expected int) *Node {
-	ci := ClusterInfo{Name: "ae", Size: expected}
+	ci := &ClusterInfo{name: "ae", size: expected}
 	hand, rpc, log := genNodeArgs(t)
 	node, err := New(ci, hand, rpc, log)
 	if err != nil {

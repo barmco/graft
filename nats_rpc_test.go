@@ -29,7 +29,7 @@ func createNatsNodes(t *testing.T, name string, numNodes int) []*Node {
 		test.DefaultTestOptions.Port)
 	opts.Url = url
 
-	ci := ClusterInfo{Name: name, Size: numNodes}
+	ci := &ClusterInfo{name: name, size: numNodes}
 	nodes := make([]*Node, numNodes)
 	for i := 0; i < numNodes; i++ {
 		hand, _, logPath := genNodeArgs(t)

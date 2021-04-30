@@ -22,7 +22,7 @@ import (
 )
 
 func TestLogPermissions(t *testing.T) {
-	ci := ClusterInfo{Name: "foo", Size: 3}
+	ci := &ClusterInfo{name: "foo", size: 3}
 	hand, rpc, log := genNodeArgs(t)
 	// remove it
 	os.Remove(log)
@@ -44,7 +44,7 @@ func TestLogPermissions(t *testing.T) {
 }
 
 func TestLogCleanupOnClose(t *testing.T) {
-	ci := ClusterInfo{Name: "foo", Size: 3}
+	ci := &ClusterInfo{name: "foo", size: 3}
 	hand, rpc, log := genNodeArgs(t)
 	node, err := New(ci, hand, rpc, log)
 	if err != nil {
@@ -60,7 +60,7 @@ func TestLogPresenceOnNew(t *testing.T) {
 	// Make sure to clean us up from wonly state
 	defer mockResetPeers()
 
-	ci := ClusterInfo{Name: "p", Size: 1}
+	ci := &ClusterInfo{name: "p", size: 1}
 	hand, rpc, log := genNodeArgs(t)
 	node, err := New(ci, hand, rpc, log)
 	if err != nil {
@@ -97,7 +97,7 @@ func TestLogPresenceOnNew(t *testing.T) {
 }
 
 func TestLogCreationOnNew(t *testing.T) {
-	ci := ClusterInfo{Name: "foo", Size: 3}
+	ci := &ClusterInfo{name: "foo", size: 3}
 	hand, rpc, log := genNodeArgs(t)
 	node, err := New(ci, hand, rpc, log)
 	if err != nil {
@@ -125,7 +125,7 @@ func TestLogCreationOnNew(t *testing.T) {
 }
 
 func TestCorruption(t *testing.T) {
-	ci := ClusterInfo{Name: "foo", Size: 3}
+	ci := &ClusterInfo{name: "foo", size: 3}
 	hand, rpc, log := genNodeArgs(t)
 	node, err := New(ci, hand, rpc, log)
 	if err != nil {

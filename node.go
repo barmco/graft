@@ -36,7 +36,7 @@ type Node struct {
 	id string
 
 	// Info for the cluster
-	info ClusterInfo
+	info *ClusterInfo
 
 	// Current state
 	state State
@@ -84,11 +84,39 @@ type Node struct {
 // ClusterInfo expresses the name and expected
 // size of the cluster.
 type ClusterInfo struct {
+	sync.RWMutex
+
 	// The cluster's name
-	Name string
+	name string
 
 	// Expected members
-	Size int
+	size int
+}
+
+func (c *ClusterInfo) Name() string {
+	c.RLock()
+	defer c.RUnlock()
+	return c.name
+}
+
+func (c *ClusterInfo) SetName(name string) *ClusterInfo {
+	c.Lock()
+	defer c.Unlock()
+	c.name = name
+	return c
+}
+
+func (c *ClusterInfo) Size() int {
+	c.RLock()
+	defer c.RUnlock()
+	return c.size
+}
+
+func (c *ClusterInfo) SetSize(num int) *ClusterInfo {
+	c.Lock()
+	defer c.Unlock()
+	c.size = num
+	return c
 }
 
 // StateMachineHandler is used to interrogate an external state machine.
@@ -131,7 +159,7 @@ type Handler interface {
 }
 
 // New will create a new Graft node. All arguments are required.
-func New(info ClusterInfo, handler Handler, rpc RPCDriver, logPath string) (*Node, error) {
+func New(info *ClusterInfo, handler Handler, rpc RPCDriver, logPath string) (*Node, error) {
 
 	// Check for correct Args
 	if err := checkArgs(info, handler, rpc, logPath); err != nil {
@@ -178,7 +206,7 @@ func genUUID() string {
 }
 
 // Convenience function for accessing the ClusterInfo.
-func (n *Node) ClusterInfo() ClusterInfo {
+func (n *Node) ClusterInfo() *ClusterInfo {
 	return n.info
 }
 
@@ -200,12 +228,12 @@ func (n *Node) clearTimers() {
 }
 
 // Make sure we have all the arguments to create the Graft node.
-func checkArgs(info ClusterInfo, handler Handler, rpc RPCDriver, logPath string) error {
+func checkArgs(info *ClusterInfo, handler Handler, rpc RPCDriver, logPath string) error {
 	// Check ClusterInfo
-	if info.Name == "" {
+	if info.Name() == "" {
 		return ErrClusterName
 	}
-	if info.Size == 0 {
+	if info.Size() == 0 {
 		return ErrClusterSize
 	}
 	// Make sure we have non-nil args
@@ -541,7 +569,7 @@ func (n *Node) handleVoteRequest(vreq *pb.VoteRequest) bool {
 // wonElection returns a bool to determine if we have a
 // majority of the votes.
 func (n *Node) wonElection(votes int) bool {
-	return votes >= quorumNeeded(n.info.Size)
+	return votes >= quorumNeeded(n.info.Size())
 }
 
 // Return the quorum size for a given cluster config.

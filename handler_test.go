@@ -48,7 +48,7 @@ func errWait(t *testing.T, ch chan error) error {
 }
 
 func TestStateChangeHandler(t *testing.T) {
-	ci := ClusterInfo{Name: "foo", Size: 1}
+	ci := &ClusterInfo{name: "foo", size: 1}
 	_, rpc, log := genNodeArgs(t)
 
 	// Use ChanHandler
@@ -83,7 +83,7 @@ func TestStateChangeHandler(t *testing.T) {
 
 // The only real errors right now are log based or RPC.
 func TestErrorHandler(t *testing.T) {
-	ci := ClusterInfo{Name: "foo", Size: 1}
+	ci := &ClusterInfo{name: "foo", size: 1}
 	_, rpc, log := genNodeArgs(t)
 
 	// Use ChanHandler
@@ -116,7 +116,7 @@ func TestErrorHandler(t *testing.T) {
 }
 
 func TestChandHandlerNotBlockingNode(t *testing.T) {
-	ci := ClusterInfo{Name: "foo", Size: 1}
+	ci := &ClusterInfo{name: "foo", size: 1}
 	_, rpc, log := genNodeArgs(t)
 
 	// Use ChanHandler
