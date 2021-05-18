@@ -279,7 +279,6 @@ func (n *Node) runAsLeader() {
 	defer hb.Stop()
 
 	for {
-		lk := n.ClusterInfo().Size()
 		select {
 
 		// Request to quit
@@ -309,10 +308,6 @@ func (n *Node) runAsLeader() {
 				return
 			}
 		case <-n.VoteResponses:
-		}
-		if lk != n.ClusterInfo().Size() {
-			n.switchToFollower(NO_LEADER)
-			return
 		}
 	}
 }
